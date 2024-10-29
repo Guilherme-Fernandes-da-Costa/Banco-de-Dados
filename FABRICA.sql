@@ -1,153 +1,124 @@
-CREATE DATABASE FABRICA;
-
-/*Cliente do sistema*/
-CREATE TABLE Cliente(
-    ID_Cliente VARCHAR(9) NOT NULL,
-    Nome VARCHAR(25) NOT NULL,
-    Email VARCHAR(9) NOT NULL,
-    Telefone VARCHAR(14) NOT NULL,
-    CEP VARCHAR(8) NOT NULL,
-    Logradouro VARCHAR(25),
-    Numero_Endereco INT NOT NULL,
-    Complemento_Endereco VARCHAR(25) NOT NULL,
-    PRIMARY KEY (ID_Cliente)
+-- CREATE DATABASE FABRICA;
+-- Tabela Cliente
+CREATE TABLE Cliente (
+    ID_Cliente INT PRIMARY KEY,
+    Nome VARCHAR(100) NOT NULL,
+    Telefone VARCHAR(15) NOT NULL,
+    Email VARCHAR(50) NOT NULL,
+    Numero INT NOT NULL,
+    CEP VARCHAR(10) NOT NULL,
+    Complemento VARCHAR(100),
+    Logradouro VARCHAR(100)
 );
 
-/*Funcionário da Empresa*/
-CREATE TABLE Funcionario(
-    ID_Funcionario VARCHAR(9) NOT NULL,
-    Nome VARCHAR(25) NOT NULL,
-    Cargo VARCHAR(25) NOT NULL,
-    Logradouro VARCHAR(25),
-    Salario DOUBLE(8,2) NOT NULL,
-    PRIMARY KEY (ID_Funcionario)
+-- Tabela Pedido
+CREATE TABLE Pedido (
+    ID_Pedido INT PRIMARY KEY,
+    Data_Pedido DATE NOT NULL,
+    Data_Entrega DATE,
+    Status VARCHAR(20) NOT NULL,
+    ID_Cliente INT,
+    FOREIGN KEY (ID_Cliente) REFERENCES Cliente(ID_Cliente) ON DELETE CASCADE
 );
 
-CREATE TABLE Funcionario_Producao (
-    turno INT NOT NULL,
-) INHERITS (Funcionario);
-
-CREATE TABLE Funcionario_Comercial (
-    area_de_vendas INT NOT NULL
-) INHERITS (Funcionario);
-
-/*Pedido feito pelo cliente para o Funcionario da Empresa*/
-CREATE TABLE Pedido(
-    ID_Pedido VARCHAR(9) NOT NULL,
-
-    ID_Cliente VARCHAR(9) NOT NULL,
-    ID_Funcionario VARCHAR(9) NOT NULL,
-    ID_Funcionario_Comercial VARCHAR(9) NOT NULL,
-    STATUS_Pedido INT NOT NULL,
-    
-    Data_Entrega_Pedido DATE NOT NULL,
-    Logradouro VARCHAR(25),
-    Valor_Total_Pedido DOUBLE(8,2) NOT NULL,
-
-    PRIMARY KEY (ID_Pedido),
-    FOREIGN KEY (ID_Cliente) REFERENCES Cliente(ID_Cliente) ON DELETE CASCADE ON CREATE DELETE
-    FOREIGN KEY (ID_Funcionario) REFERENCES Funcionario(ID_Funcionario) ON DELETE CASCADE ON CREATE DELETE
-    FOREIGN KEY (ID_Funcionario_Comercial) REFERENCES Funcionario_Comercial(ID_Funcionario_Comercial) ON DELETE CASCADE ON CREATE DELETE
-
-);
-
-CREATE TABLE Produto(
-    ID_Produto VARCHAR(9) NOT NULL,
-    -- ID_MaterialPrima VARCHAR(9) NOT NULL,
-    -- ID_Insumo VARCHAR(9) NOT NULL,
-    
-    Custo_Unitario DOUBLE(11,2) NOT NULL,
-    Nome_Produto VARCHAR(25) NOT NULL,
+-- Tabela Produto
+CREATE TABLE Produto (
+    ID_Produto INT PRIMARY KEY,
+    Nome VARCHAR(100) NOT NULL,
+    Descricao TEXT,
     Estoque_Disponivel INT NOT NULL,
-
-    PRIMARY KEY (ID_Produto)
+    Custo_Unitario DECIMAL(10, 2) NOT NULL
 );
 
-CREATE TABLE Produto_Pedido(
-    ID_Produto VARCHAR(9) NOT NULL,
-    ID_Pedido VARCHAR(9) NOT NULL,
-    Preco_Venda DOUBLE(11,2) NOT NULL,
+-- Tabela Contém (relacionamento entre Pedido e Produto)
+CREATE TABLE Contem (
+    ID_Pedido INT,
+    ID_Produto INT,
     Quantidade INT NOT NULL,
-    Status_Produto_Pedido INT NOT NULL,
-
-    PRIMARY KEY (ID_Produto,ID_Pedido),
-    FOREIGN KEY (ID_Produto) REFERENCES Pedido(ID_Produto) ON DELETE CASCADE ON CREATE DELETE
-    FOREIGN KEY (ID_Pedido) REFERENCES Pedido(ID_Pedido) ON DELETE CASCADE ON CREATE DELETE
+    PRIMARY KEY (ID_Pedido, ID_Produto),
+    FOREIGN KEY (ID_Pedido) REFERENCES Pedido(ID_Pedido) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Produto) REFERENCES Produto(ID_Produto) ON DELETE CASCADE
 );
 
-CREATE TABLE Fornecedor(
-    ID_Fornecedor VARCHAR(9) NOT NULL,
-    Avaliacao VARCHAR(255) NOT NULL,
-    Contato VARCHAR(255) NOT NULL,
-    Nome VARCHAR(255) NOT NULL,
-    PRIMARY KEY (ID_Fornecedor)
+-- Tabela Ordem de Produção
+CREATE TABLE OrdemProducao (
+    ID_Ordem INT PRIMARY KEY,
+    Quantidade_Produzida INT NOT NULL,
+    Status VARCHAR(20) NOT NULL,
+    Custo_Total DECIMAL(10, 2),
+    Data_Criacao DATE NOT NULL,
+    Data_Conclusao DATE
 );
 
-CREATE TABLE MateriaPrima(
-    ID_MaterialPrima
-    Custo_Unitario DOUBLE(11,2) NOT NULL,
-    Nome_Produto VARCHAR(25) NOT NULL,
+-- Tabela Contém (relacionamento entre Produto e Ordem de Produção)
+CREATE TABLE ContemOrdemProducao (
+    ID_Produto INT,
+    ID_Ordem INT,
+    Quantidade INT NOT NULL,
+    PRIMARY KEY (ID_Produto, ID_Ordem),
+    FOREIGN KEY (ID_Produto) REFERENCES Produto(ID_Produto) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Ordem) REFERENCES OrdemProducao(ID_Ordem) ON DELETE CASCADE
+);
+
+-- Tabela Matéria-Prima
+CREATE TABLE MateriaPrima (
+    ID_MateriaPrima INT PRIMARY KEY,
+    Nome VARCHAR(100) NOT NULL,
+    Custo_Unidade DECIMAL(10, 2) NOT NULL,
     Estoque_Disponivel INT NOT NULL
-    PRIMARY KEY (ID_MaterialPrima)
 );
 
-CREATE TABLE Constitui(
-    ID_MaterialPrima VARCHAR(9) NOT NULL,
-    ID_Produto VARCHAR(9) NOT NULL,
-    PRIMARY KEY (ID_Produto, ID_MaterialPrima),
-    FOREIGN KEY (ID_Produto) REFERENCES Fornecedor(ID_Produto),
-    FOREIGN KEY (ID_MaterialPrima) REFERENCES Fornecedor(ID_MaterialPrima)
+-- Tabela Constituido (relacionamento entre Produto e Materia-Prima)
+CREATE TABLE Constituido (
+    ID_Produto INT,
+    ID_MateriaPrima INT,
+    Quantidade INT NOT NULL,
+    PRIMARY KEY (ID_Produto, ID_MateriaPrima),
+    FOREIGN KEY (ID_Produto) REFERENCES Produto(ID_Produto) ON DELETE CASCADE,
+    FOREIGN KEY (ID_MateriaPrima) REFERENCES MateriaPrima(ID_MateriaPrima) ON DELETE CASCADE
 );
 
-CREATE TABLE Lista(
-    ID_Fornecedor VARCHAR(9) NOT NULL,
-    ID_MaterialPrima VARCHAR(9) NOT NULL,
-    PRIMARY KEY (ID_Fornecedor,ID_MaterialPrima),
-    FOREIGN KEY (ID_Fornecedor) REFERENCES Fornecedor(ID_Fornecedor),
-    FOREIGN KEY (ID_MaterialPrima) REFERENCES MateriaPrima(ID_MaterialPrima)
+-- Tabela Fornecedor
+CREATE TABLE Fornecedor (
+    ID_Fornecedor INT PRIMARY KEY,
+    Nome VARCHAR(100) NOT NULL,
+    Avaliacao DECIMAL(3, 2),
+    Telefone VARCHAR(15) NOT NULL,
+    Email VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE Relatorio_Vendas (
-    ID_Relatorio_Vendas VARCHAR(9) NOT NULL,
-    Data_Vendas DATE NOT NULL,
-    Status_Venda INT NOT NULL,
-    ID_Funcionario_Comercial VARCHAR(9) NOT NULL,
-
-    PRIMARY KEY (ID_Relatorio_Vendas),
-    FOREIGN KEY (ID_Funcionario_Comercial) REFERENCES Funcionario_Comercial(ID_Funcionario_Comercial)
+-- Tabela Fornece (relacionamento entre Fornecedor e Materia-Prima)
+CREATE TABLE Fornece (
+    ID_Fornecedor INT,
+    ID_MateriaPrima INT,
+    Preco INT NOT NULL,
+    PRIMARY KEY (ID_Fornecedor, ID_MateriaPrima),
+    FOREIGN KEY (ID_Fornecedor) REFERENCES Fornecedor(ID_Fornecedor) ON DELETE CASCADE,
+    FOREIGN KEY (ID_MateriaPrima) REFERENCES MateriaPrima(ID_MateriaPrima) ON DELETE CASCADE
 );
 
-CREATE TABLE Ordem_de_Pagamentos (
-    Valor_OrdemDePagamento DOUBLE(11,2) NOT NULL,
-    Status_OrdemDePagamentos INT NOT NULL,
-    Data_OrdemDePagamentos DATE NOT NULL,
-    ID_OrdemDePagamentos VARCHAR(9) NOT NULL,
-    ID_Pedido VARCHAR(9) NOT NULL,
-
-    PRIMARY KEY (ID_OrdemDePagamentos),
-    FOREIGN KEY (ID_Pedido) REFERENCES Pedido(ID_Pedido)
+-- Tabela Funcionário
+CREATE TABLE Funcionario (
+    ID_Funcionario INT PRIMARY KEY,
+    Nome VARCHAR(100) NOT NULL,
+    Cargo VARCHAR(50) NOT NULL,
+    Salario DECIMAL(10, 2) NOT NULL
 );
 
-CREATE TABLE Ordem_de_Producao (
-    Custo_Total DOUBLE(11,2) NOT NULL,
-    Status_OrdemDeProducao INT NOT NULL,
-    Data_Cricao DATE NOT NULL,
-    Data_Conclusao DATE NOT NULL,
-    Qtd_Produzida INT NOT NULL,
-
-
-    ID_OrdemDeProducao VARCHAR(9) NOT NULL,
-    ID_Pedido VARCHAR(9) NOT NULL,
-
-    PRIMARY KEY (ID_OrdemDeProducao),
-    FOREIGN KEY (ID_Pedido) REFERENCES Pedido(ID_Pedido)
+-- Tabela Recebe (relacionamento entre Funcionário e Pedido)
+CREATE TABLE Recebe (
+    ID_Funcionario INT,
+    ID_Pedido INT,
+    PRIMARY KEY (ID_Funcionario, ID_Pedido),
+    FOREIGN KEY (ID_Funcionario) REFERENCES Funcionario(ID_Funcionario) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Pedido) REFERENCES Pedido(ID_Pedido) ON DELETE CASCADE
 );
 
-CREATE TABLE Demanda (
-    ID_Fornecedor VARCHAR(9) NOT NULL,
-    ID_OrdemDeProducao VARCHAR(9) NOT NULL,
-
-    PRIMARY KEY (ID_OrdemDeProducao, ID_Fornecedor),
-    FOREIGN KEY (ID_OrdemDeProducao) REFERENCES Ordem_de_Producao(ID_OrdemDeProducao),
-    FOREIGN KEY (ID_Fornecedor) REFERENCES Fornecedor(ID_Fornecedor)
+-- Tabela Realiza (relacionamento entre Funcionário e Ordem de Produção)
+CREATE TABLE Realiza (
+    ID_Funcionario INT,
+    ID_Ordem INT,
+    PRIMARY KEY (ID_Funcionario, ID_Ordem),
+    FOREIGN KEY (ID_Funcionario) REFERENCES Funcionario(ID_Funcionario) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Ordem) REFERENCES OrdemProducao(ID_Ordem) ON DELETE CASCADE
 );

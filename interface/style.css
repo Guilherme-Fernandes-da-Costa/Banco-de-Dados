@@ -1,0 +1,63 @@
+/* Configuração de cores */
+:root {
+    --cor-fundo: #ffffff;
+    --cor-primaria: #4169e1; /* Royal Blue */
+    --cor-secundaria: #6a0dad; /* Roxo */
+    --cor-texto: #333333;
+    --cor-borda: #d0d0d0;
+    --cor-hover: #5a2dab;
+}
+
+/* Estilo geral */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Barra de navegação */
+.navbar {
+    width: 100%;
+    background-color: var(--cor-primaria);
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #ffffff;
+}
+
+.navbar h1 {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.navbar a {
+    color: #ffffff;
+    margin: 0 10px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.navbar a:hover {
+    color: var(--cor-hover);
+}
+
+/* Contêiner principal */
+.container {
+    max-width: 1200px;
+    width: 100%;
+    padding: 20px;
+}
+
+/* Botões */
+button {
+    background-color: var(--cor-

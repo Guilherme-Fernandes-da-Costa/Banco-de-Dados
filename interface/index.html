@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Consultas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        #consulta-container {
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #consulta-resultados {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        #consulta-resultados p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Sistema de Consultas</h1>
+
+    <div id="consulta-container">
+        <label for="input-consulta">Digite a consulta:</label>
+        <input type="text" id="input-consulta" placeholder="Insira o termo da consulta" />
+        <button onclick="realizarConsulta()">Consultar</button>
+    </div>
+
+    <div id="consulta-resultados">
+        <p>Os resultados da consulta aparecerão aqui.</p>
+    </div>
+
+    <script>
+        function realizarConsulta() {
+            const termo = document.getElementById("input-consulta").value;
+            const resultadosContainer = document.getElementById("consulta-resultados");
+            
+            // Limpa os resultados anteriores
+            resultadosContainer.innerHTML = '';
+
+            // Simula uma consulta com resultados fictícios (substitua com a lógica real de consulta)
+            if (termo.trim() !== "") {
+                // Exemplo de resultados fictícios
+                const resultados = [
+                    `Resultado 1 para "${termo}"`,
+                    `Resultado 2 para "${termo}"`,
+                    `Resultado 3 para "${termo}"`
+                ];
+
+                resultados.forEach(resultado => {
+                    const p = document.createElement("p");
+                    p.textContent = resultado;
+                    resultadosContainer.appendChild(p);
+                });
+            } else {
+                resultadosContainer.innerHTML = '<p>Por favor, insira um termo de consulta.</p>';
+            }
+        }
+    </script>
+
+</body>
+</html>

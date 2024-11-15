@@ -1,0 +1,85 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    /* background-color:snow; */
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .logo {
+     position: relative;
+    z-index: -1;
+    /* display: flex;
+    flex-direction: column; */
+    /* margin-bottom: 20px; */
+    /* padding-left: 25%; */
+    margin-left: 92px;
+    justify-content: center;
+    align-items: center;
+    
+  }
+  
+  .logo img { 
+    max-width: 128px;
+  }
+  .logo video {
+    position:relative;
+    z-index: -2;
+    /* display: none; */
+    max-width: 180px;
+  }
+  
+  .nome_empresa {
+    margin-left: 45px;
+    margin-top: 10px;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: large;
+    font-weight:700;
+  }
+  .container {
+    /* position: relative;
+    z-index: -2;     */
+    background-color: #d9d9d9;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    border: 4px solid black;
+}
+  
+  .login-form {
+    display:flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .login-form input {
+    padding: 10px 16px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    font-size: 16px;
+    stroke-width: 4px;
+    /* stroke: black; */
+  }
+  
+  .login-form button {
+    background-color: rgb(148, 148, 148);
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .login-form button:hover {
+    background-color: #0056b3;
+  }
